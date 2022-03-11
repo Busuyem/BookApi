@@ -19,13 +19,26 @@ class BookController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function __invoke($search)
+    public function __invoke()
     {
-        $response = Http::acceptJson()->get('https://www.anapioficeandfire.com/api/books?name=');
+        $response = Http::acceptJson()->get('https://www.anapioficeandfire.com/api/books');
 
         $res = json_decode($response->getBody()->getContents(), true);
 
-        return $res;
+        try{
+            return response()->json([
+                "status_code" => 200,
+                "status" => "success",
+                "data" => $res
+            ]);
+
+        }catch(Throwable $e){
+            return response()->json([
+                "status_code" => 404,
+                "Status" => "Not found",
+                "data"=> []
+            ]);
+        }
     }
 
     public function index()
